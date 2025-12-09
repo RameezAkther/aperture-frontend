@@ -1,0 +1,26 @@
+.toolBtn {
+	background: #1e1e1e;
+	border: none;
+	border-radius: 20px;
+	padding: 10px;
+	color: #888;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.2s;
+}
+
+.toolBtn:hover {
+	background: #333;
+}
+
+.toolBtn img {
+	width: 20px;
+	height: 20px;
+	display: block; /* Removes implicit line-height spacing on images */
+}
+
+.toolBtnIcon {
+	width: 10px;
+}

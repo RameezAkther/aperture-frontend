@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link rel="stylesheet" href="sample.css" />
+	</head>
+	<body>
+		<div class="sidebar" id="sidebar">
+			<div class="logo">
+				<img src="logo.svg" alt="logo" class="logo-icon" />
+				<span class="logo-text">APERTURE</span>
+			</div>
+
+			<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+			<ul class="menu">
+				<li>
+					<image class="icon" src="new_project.svg"></image>
+					<span class="label">New Project</span>
+				</li>
+				<li>
+					<span class="icon">🔍</span
+					><span class="label">Search</span>
+				</li>
+				<li>
+					<span class="icon">📂</span
+					><span class="label">Folder</span>
+				</li>
+			</ul>
+
+			<div class="section-title">Projects</div>
+
+			<ul class="projects">
+				<li>Fix the code file for my Proje_</li>
+				<li>Technical rewriting</li>
+				<li>Document Analysis and Next Steps_</li>
+				<li>Health Monitoring System Documen_</li>
+				<li>Recursive State-Management.</li>
+				<li>Zoho Hackathon 2025 Registration</li>
+			</ul>
+
+			<div class="settings">
+				<span class="icon">⚙️</span>
+				<span class="label">Settings</span>
+			</div>
+		</div>
+	</body>
+	<script>
+		function toggleSidebar() {
+			document.getElementById("sidebar").classList.toggle("collapsed");
+		}
+	</script>
+</html>

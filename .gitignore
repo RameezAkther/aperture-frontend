@@ -1,0 +1,56 @@
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node modules
+/node_modules
+
+# Dist output
+/dist
+/build
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Mac / Linux / Windows system files
+.DS_Store
+Thumbs.db
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Vite cache
+/.vite
+vite.config.ts.timestamp*
+vite.config.ts.*.json
+
+# Optional: if using Vitest
+coverage
+*.log
+test-results/
+
+# Optional: if using ESLint / Prettier cache
+.eslintcache
+.prettier-cache
+
+# Optional: if using Turbo
+/.turbo
+
+# Optional: if using Storybook
+/storybook-static

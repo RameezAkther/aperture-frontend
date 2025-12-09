@@ -1,0 +1,110 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600&display=swap");
+
+.project-btn {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 6px 9px 6px 16px; /* Right padding reduced to accommodate icon wrapper */
+	background: #111;
+	color: white;
+	border-radius: 25px;
+	font-family: "Inconsolata", monospace;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background 0.15s ease, transform 0.1s ease;
+	user-select: none;
+	box-sizing: border-box; /* Essential for padding calc */
+}
+
+.project-btn:hover {
+	background: #1e1e1e;
+}
+
+.project-btn:active {
+	transform: scale(0.98);
+	background: #000;
+}
+
+/* --- Text Handling --- */
+
+.text-container {
+	display: flex;
+	align-items: center;
+	flex: 1;
+	min-width: 0; /* Critical for flex child truncation */
+	margin-right: 8px; /* Space between text and dots */
+
+	/* The Fade Mask Effect */
+	mask-image: linear-gradient(90deg, black 85%, transparent);
+	-webkit-mask-image: linear-gradient(90deg, black 85%, transparent);
+}
+
+.project-text {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: clip;
+}
+
+/* The Cursor Underscore */
+.cursor-underscore {
+	opacity: 0;
+	margin-left: 2px;
+	transition: opacity 0.2s;
+	flex-shrink: 0; /* Ensures the underscore is never chopped off */
+}
+
+/* Logic: Show underscore when hovering the ROW, or specifically the MENU */
+.project-btn:hover .cursor-underscore {
+	opacity: 1;
+	animation: blink 1s step-end infinite; /* Optional: Makes it blink like a terminal */
+}
+
+/* --- Icon (Menu) Handling --- */
+
+.project-icon-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	/* Resetting button styles */
+	background: transparent;
+	border: none;
+	color: inherit;
+	padding: 0;
+
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+
+	opacity: 0;
+	transition: opacity 0.15s ease, background 0.15s ease;
+	cursor: pointer;
+}
+
+/* Reveal icon when hovering the ROW */
+.project-btn:hover .project-icon-wrapper {
+	opacity: 1;
+}
+
+/* Specific hover effect for the menu dots */
+.project-icon-wrapper:hover {
+	background: rgba(255, 255, 255, 0.2); /* Highlight the dots circle */
+}
+
+.project-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+}
+
+@keyframes blink {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+}

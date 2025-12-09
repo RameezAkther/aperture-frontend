@@ -1,0 +1,549 @@
+@import url("https://fonts.googleapis.com/css2?family=Jersey+10&family=Inconsolata:wght@400;500;700&display=swap");
+
+:root {
+	/* DARKER PALETTE */
+	--vs-bg: #0d0d0d; /* Main Editor Background - Almost Black */
+	--vs-sidebar: #050505; /* Activity Bar Background */
+	--vs-panel: #111111; /* File Tree / Tab Bar Background */
+	--vs-tab-active: #0d0d0d;
+	--vs-text: #cccccc;
+
+	/* SYNTAX COLORS */
+	--vs-keyword: #c586c0; /* Pink */
+	--vs-variable: #9cdcfe; /* Light Blue */
+	--vs-function: #dcdcaa; /* Yellow */
+	--vs-string: #e9d900; /* Orange/Brown */
+	--vs-comment: #6a9955; /* Green for comments */
+
+	--vs-border: #222222;
+	--vs-blue: #007acc;
+	--app-accent: #e9d900; /* Your specific yellow */
+}
+
+/* Custom Scrollbar for the whole Login App */
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+::-webkit-scrollbar-track {
+	background: var(--vs-bg);
+}
+::-webkit-scrollbar-thumb {
+	background: #333;
+	border: 2px solid var(--vs-bg);
+	border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #444;
+}
+
+.ide-auth-container {
+	height: 100vh;
+	width: 100vw;
+	background-color: #111111;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-family: "Inconsolata", monospace;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Background Grid */
+.bg-grid {
+	position: absolute;
+	width: 200%;
+	height: 200%;
+	background-image: linear-gradient(
+			rgba(255, 255, 255, 0.02) 1px,
+			transparent 1px
+		),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+	background-size: 50px 50px;
+	opacity: 0.5;
+	z-index: 1;
+}
+
+.app-branding {
+	font-family: "Jersey 10", sans-serif;
+	font-size: 3rem; /* REQUESTED CHANGE: 3rem */
+	color: var(--app-accent);
+	z-index: 10;
+	letter-spacing: 1px;
+}
+
+/* MAIN WINDOW CONTAINER */
+.ide-window {
+	width: 900px; /* REQUESTED CHANGE: Wider */
+	max-width: 95vw;
+	height: 600px;
+	background: var(--vs-bg);
+	border: 1px solid var(--vs-border);
+	border-radius: 6px;
+	box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+	display: flex;
+	z-index: 10;
+	overflow: hidden;
+}
+
+/* --- Activity Bar (Far Left) --- */
+.activity-bar {
+	width: 50px;
+	background: var(--vs-sidebar);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 15px;
+	border-right: 1px solid var(--vs-border);
+}
+
+.activity-bar .icon {
+	width: 100%;
+	height: 48px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #555;
+	cursor: pointer;
+	border-left: 2px solid transparent;
+}
+
+.activity-bar .icon.active {
+	color: #fff;
+	border-left: 2px solid #fff; /* Active Indicator */
+}
+
+/* --- Main Editor Area (Right of Activity Bar) --- */
+.main-editor-area {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+/* --- Tabs --- */
+.ide-tabs {
+	display: flex;
+	background: var(--vs-panel);
+	height: 38px;
+	align-items: center;
+	border-bottom: 1px solid var(--vs-border);
+}
+
+.tab {
+	padding: 0 25px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	color: #777;
+	font-size: 0.9rem;
+	background: var(--vs-panel);
+	cursor: pointer;
+	border-right: 1px solid var(--vs-border);
+	gap: 8px;
+	transition: all 0.2s;
+}
+
+.tab:hover {
+	background: #1f1f1f;
+	color: #aaa;
+}
+.tab.active {
+	background: var(--vs-bg);
+	color: var(--app-accent); /* Active tab highlight */
+	border-top: 2px solid var(--app-accent);
+}
+
+.ts-icon {
+	color: #3178c6;
+	font-weight: bold;
+	font-size: 0.8rem;
+}
+.tab-spacer {
+	flex-grow: 1;
+	background: var(--vs-panel);
+	height: 100%;
+}
+.window-controls {
+	display: flex;
+	gap: 8px;
+	padding-right: 15px;
+}
+.dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+}
+.yellow {
+	background: #f1c40f;
+}
+.green {
+	background: #2ecc71;
+}
+.red {
+	background: #e74c3c;
+}
+
+/* --- Editor --- */
+.ide-editor {
+	flex: 1;
+	display: flex;
+	padding: 15px 0;
+	background: var(--vs-bg);
+	overflow-y: auto;
+}
+
+.line-numbers {
+	width: 50px;
+	text-align: right;
+	padding-right: 15px;
+	color: #444;
+	font-size: 0.95rem;
+	line-height: 2rem;
+	user-select: none;
+	border-right: 1px solid #222;
+}
+
+.code-area {
+	flex: 1;
+	padding-left: 20px;
+	font-size: 1.05rem;
+	line-height: 2rem;
+	color: var(--vs-text);
+}
+
+.code-line {
+	display: block;
+}
+.code-line.comment {
+	color: var(--vs-comment);
+	font-style: italic;
+}
+.code-block-content {
+	padding-left: 2rem;
+	border-left: 1px solid #222;
+	margin-left: 4px;
+}
+
+.keyword {
+	color: var(--vs-keyword);
+}
+.variable {
+	color: var(--vs-variable);
+}
+.function {
+	color: var(--vs-function);
+}
+.string {
+	color: var(--vs-string);
+}
+.arrow {
+	color: var(--vs-blue);
+}
+.semicolon {
+	color: #888;
+}
+
+.input-line {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	position: relative;
+}
+.input-line label {
+	min-width: 90px;
+}
+
+/* Making Inputs obvious */
+.code-input {
+	background: transparent;
+	border: none;
+	border-bottom: 1px dashed #333; /* Visual cue it's an input */
+	font-family: "Inconsolata", monospace;
+	font-size: 1.05rem;
+	color: var(--vs-string);
+	outline: none;
+	flex-grow: 1;
+	max-width: 300px;
+	transition: 0.2s;
+}
+.code-input::placeholder {
+	color: #444;
+	opacity: 0.5;
+}
+.code-input:focus {
+	background: #1a1a1a;
+	border-bottom: 1px solid var(--app-accent);
+}
+
+/* Action Area */
+.action-area {
+	margin-top: 30px;
+	padding-left: 2rem;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.debug-btn {
+	background: #1a1a1a;
+	border: 1px solid #333;
+	color: var(--app-accent);
+	font-family: "Inconsolata", monospace;
+	font-weight: bold;
+	padding: 10px 20px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border-radius: 3px;
+	transition: 0.2s;
+}
+.debug-btn:hover {
+	background: var(--app-accent);
+	color: black;
+	border-color: var(--app-accent);
+}
+.shortcut-hint {
+	color: #444;
+	font-size: 0.8rem;
+}
+
+/* --- Terminal --- */
+.ide-terminal {
+	height: 150px;
+	border-top: 1px solid var(--vs-border);
+	background: var(--vs-bg);
+	display: flex;
+	flex-direction: column;
+}
+
+.terminal-header {
+	display: flex;
+	gap: 25px;
+	padding: 8px 25px;
+	font-size: 0.7rem;
+	color: #666;
+	border-bottom: 1px solid var(--vs-border);
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+.active-term {
+	color: #fff;
+	border-bottom: 1px solid #fff;
+}
+
+.terminal-body {
+	padding: 15px 25px;
+	font-size: 0.85rem;
+	color: #bbb;
+	flex-grow: 1;
+	overflow-y: auto;
+}
+.term-path {
+	color: #89d185;
+	margin-right: 8px;
+}
+.term-cursor {
+	animation: blink 1s infinite;
+	color: var(--app-accent);
+}
+
+/* --- Linter / Validation Specifics --- */
+
+/* 1. Red Squiggly Line under Input */
+.error-squiggly {
+	/* Standard Border fallback */
+	border-bottom: 1px dashed #f14c4c !important;
+	/* If supported, use wave */
+	text-decoration: underline wavy #f14c4c;
+	color: #f14c4c !important; /* Make text red like bad code */
+}
+
+/* 2. Gutter Indicators (Red Dot next to line number) */
+.line-num-wrapper {
+	position: relative;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.gutter-error {
+	width: 6px;
+	height: 6px;
+	background-color: #f14c4c;
+	border-radius: 50%;
+	position: absolute;
+	left: 4px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+/* 3. Window Shake Animation on Error */
+.window-shake {
+	animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+	10%,
+	90% {
+		transform: translate3d(-1px, 0, 0);
+	}
+	20%,
+	80% {
+		transform: translate3d(2px, 0, 0);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translate3d(-4px, 0, 0);
+	}
+	40%,
+	60% {
+		transform: translate3d(4px, 0, 0);
+	}
+}
+
+/* 4. Tab Error Dot */
+.tab-error-dot {
+	color: #f14c4c;
+	font-size: 0.6rem;
+	margin-left: 5px;
+}
+
+/* --- Bottom Panel (Problems & Terminal) --- */
+.ide-bottom-panel {
+	height: 160px;
+	border-top: 1px solid var(--vs-border);
+	background: var(--vs-bg);
+	display: flex;
+	flex-direction: column;
+}
+
+.panel-header {
+	display: flex;
+	gap: 25px;
+	padding: 8px 25px;
+	font-size: 0.75rem;
+	color: #666;
+	border-bottom: 1px solid var(--vs-border);
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 1px;
+	cursor: default;
+}
+
+.panel-header span {
+	cursor: pointer;
+	padding-bottom: 2px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.panel-header span:hover {
+	color: #ccc;
+}
+
+.panel-header .active-tab {
+	color: #fff;
+	border-bottom: 1px solid var(--app-accent);
+}
+
+.badge {
+	background: #f14c4c;
+	color: white;
+	font-size: 0.65rem;
+	padding: 0px 5px;
+	border-radius: 10px;
+}
+
+.panel-body {
+	padding: 10px 0;
+	font-size: 0.85rem;
+	color: #bbb;
+	flex-grow: 1;
+	overflow-y: auto;
+	font-family: "Inconsolata", monospace;
+}
+
+/* Terminal Specifics */
+.term-line {
+	padding: 2px 25px;
+}
+.term-path {
+	color: #89d185;
+	margin-right: 8px;
+}
+
+/* Problems Specifics */
+.problems-list {
+	display: flex;
+	flex-direction: column;
+}
+
+.no-problems {
+	padding: 10px 25px;
+	color: #666;
+	font-style: italic;
+}
+
+.problem-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 4px 25px;
+	cursor: pointer;
+	border-left: 3px solid transparent;
+}
+
+.problem-item:hover {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.error-icon {
+	color: #f14c4c;
+	font-size: 0.9rem;
+}
+
+.error-msg {
+	color: #ccc;
+	flex: 1;
+}
+
+.error-loc {
+	color: #666;
+	font-size: 0.8rem;
+}
+
+/* Status Bar Updates */
+.ide-status-bar {
+	height: 22px;
+	background: #9c8200; /* VS Code Blue */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 10px;
+	font-size: 0.75rem;
+	color: #fff;
+	z-index: 20;
+}
+.status-error {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	cursor: pointer;
+}
+.status-left {
+	display: flex;
+	gap: 15px;
+	align-items: center;
+}
+.remote-icon {
+	background: #836d00;
+	padding: 0 10px;
+	height: 22px;
+	display: flex;
+	align-items: center;
+	margin-left: -10px;
+}

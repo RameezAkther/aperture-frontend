@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Figma to Responsive Converter</title>
+		<style>
+			/* --- CSS VARIABLES & THEME --- */
+			:root {
+				--bg-color: #f3f4f6;
+				--card-bg: #ffffff;
+				--text-main: #1f2937;
+				--text-muted: #6b7280;
+				--primary: #3b82f6;
+				--primary-hover: #2563eb;
+				--border: #e5e7eb;
+				--shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+					0 2px 4px -1px rgba(0, 0, 0, 0.06);
+				--radius: 12px;
+			}
+
+			/* Dark Mode Overrides */
+			body.dark-mode {
+				--bg-color: #111827;
+				--card-bg: #1f2937;
+				--text-main: #f9fafb;
+				--text-muted: #9ca3af;
+				--primary: #60a5fa;
+				--primary-hover: #3b82f6;
+				--border: #374151;
+			}
+
+			/* --- GLOBAL RESET & TYPOGRAPHY --- */
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				transition: background-color 0.3s, color 0.3s;
+			}
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+					Roboto, Helvetica, Arial, sans-serif;
+				background-color: var(--bg-color);
+				color: var(--text-main);
+				display: flex;
+				justify-content: center;
+				min-height: 100vh;
+				padding: 2rem 1rem;
+			}
+
+			/* --- LAYOUT --- */
+			.container {
+				width: 100%;
+				max-width: 900px;
+				display: flex;
+				flex-direction: column;
+				gap: 2rem;
+			}
+
+			/* --- HEADER --- */
+			header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			h1 {
+				font-size: 1.5rem;
+				font-weight: 700;
+			}
+
+			.theme-toggle {
+				background: none;
+				border: 2px solid var(--border);
+				color: var(--text-main);
+				padding: 0.5rem 1rem;
+				border-radius: 20px;
+				cursor: pointer;
+				font-weight: 600;
+				font-size: 0.9rem;
+			}
+			.theme-toggle:hover {
+				background-color: var(--border);
+			}
+
+			/* --- CARDS --- */
+			.card {
+				background-color: var(--card-bg);
+				border-radius: var(--radius);
+				padding: 2rem;
+				box-shadow: var(--shadow);
+				border: 1px solid var(--border);
+			}
+
+			.section-title {
+				font-size: 1.1rem;
+				font-weight: 600;
+				margin-bottom: 1.5rem;
+				color: var(--primary);
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+
+			/* --- INPUTS GRID --- */
+			.input-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1.5rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.input-group {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+			.input-group label {
+				font-size: 0.85rem;
+				font-weight: 600;
+				color: var(--text-muted);
+			}
+
+			input {
+				width: 100%;
+				padding: 0.75rem;
+				border-radius: 8px;
+				border: 1px solid var(--border);
+				background-color: var(--bg-color);
+				color: var(--text-main);
+				font-size: 1rem;
+				font-family: inherit;
+			}
+			input:focus {
+				outline: none;
+				border-color: var(--primary);
+				box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+			}
+
+			/* Highlight the main input */
+			#figmaVal {
+				border-color: var(--primary);
+				background-color: var(--card-bg);
+				font-weight: bold;
+			}
+
+			/* --- ACTIONS --- */
+			.actions {
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+				margin-top: 1rem;
+			}
+			.btn {
+				padding: 0.75rem 1.5rem;
+				border-radius: 8px;
+				border: none;
+				font-weight: 600;
+				cursor: pointer;
+				font-size: 0.95rem;
+			}
+			.btn-primary {
+				background-color: var(--primary);
+				color: white;
+			}
+			.btn-primary:hover {
+				background-color: var(--primary-hover);
+			}
+			.btn-secondary {
+				background-color: transparent;
+				border: 1px solid var(--border);
+				color: var(--text-main);
+			}
+			.btn-secondary:hover {
+				background-color: var(--border);
+			}
+
+			/* --- RESULTS GRID --- */
+			.results-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+				gap: 1rem;
+			}
+
+			.result-item {
+				background-color: var(--bg-color);
+				padding: 1rem;
+				border-radius: 8px;
+				border: 1px solid var(--border);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.result-info {
+				display: flex;
+				flex-direction: column;
+				gap: 0.25rem;
+			}
+			.result-label {
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				color: var(--text-muted);
+				font-weight: 700;
+			}
+			.result-value {
+				font-size: 1.25rem;
+				font-weight: 600;
+				color: var(--text-main);
+				font-family: monospace;
+			}
+
+			/* Copy Button */
+			.copy-btn {
+				background: none;
+				border: none;
+				cursor: pointer;
+				color: var(--text-muted);
+				padding: 0.5rem;
+				border-radius: 4px;
+			}
+			.copy-btn:hover {
+				background-color: var(--border);
+				color: var(--primary);
+			}
+			.copy-btn svg {
+				width: 20px;
+				height: 20px;
+			}
+
+			/* Toast Notification */
+			#toast {
+				position: fixed;
+				bottom: 20px;
+				left: 50%;
+				transform: translateX(-50%);
+				background-color: var(--text-main);
+				color: var(--bg-color);
+				padding: 0.75rem 1.5rem;
+				border-radius: 50px;
+				font-size: 0.9rem;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.3s ease;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			}
+			#toast.show {
+				opacity: 1;
+			}
+
+			@media (max-width: 600px) {
+				.input-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<h1>PX Converter</h1>
+				<button id="themeToggle" class="theme-toggle">
+					🌙 Dark Mode
+				</button>
+			</header>
+
+			<div class="card">
+				<div class="section-title">Configuration</div>
+
+				<div class="input-grid">
+					<div class="input-group">
+						<label for="designWidth">Design Width (px)</label>
+						<input type="number" id="designWidth" value="1920" />
+					</div>
+					<div class="input-group">
+						<label for="designHeight">Design Height (px)</label>
+						<input type="number" id="designHeight" value="1080" />
+					</div>
+					<div class="input-group">
+						<label for="actualWidth"
+							>Actual Screen Width (px)</label
+						>
+						<input
+							type="number"
+							id="actualWidth"
+							placeholder="e.g. 1366"
+						/>
+					</div>
+					<div class="input-group">
+						<label for="actualHeight"
+							>Actual Screen Height (px)</label
+						>
+						<input
+							type="number"
+							id="actualHeight"
+							placeholder="e.g. 768"
+						/>
+					</div>
+					<div class="input-group">
+						<label for="rootFont">Root Font Size (px)</label>
+						<input type="number" id="rootFont" value="16" />
+					</div>
+				</div>
+
+				<div
+					style="
+						margin-top: 1rem;
+						border-top: 1px solid var(--border);
+						padding-top: 1.5rem;
+					"
+				>
+					<div class="input-group">
+						<label for="figmaVal" style="color: var(--primary)"
+							>Target Figma Value (px)</label
+						>
+						<input
+							type="number"
+							id="figmaVal"
+							placeholder="Enter value to convert..."
+							autofocus
+						/>
+					</div>
+				</div>
+
+				<div class="actions">
+					<button id="convertBtn" class="btn btn-primary">
+						Convert
+					</button>
+					<button id="autoDetectBtn" class="btn btn-secondary">
+						📍 Auto-Detect My Screen
+					</button>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="section-title">Results</div>
+				<div class="results-grid">
+					<div class="result-item">
+						<div class="result-info">
+							<span class="result-label">Scaled (Width)</span>
+							<span class="result-value" id="res-px-w">0px</span>
+						</div>
+						<button
+							class="copy-btn"
+							onclick="copyToClipboard('res-px-w')"
+							aria-label="Copy"
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<rect
+									x="9"
+									y="9"
+									width="13"
+									height="13"
+									rx="2"
+									ry="2"
+								></rect>
+								<path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+								></path>
+							</svg>
+						</button>
+					</div>
+
+					<div class="result-item">
+						<div class="result-info">
+							<span class="result-label">Scaled (Height)</span>
+							<span class="result-value" id="res-px-h">0px</span>
+						</div>
+						<button
+							class="copy-btn"
+							onclick="copyToClipboard('res-px-h')"
+							aria-label="Copy"
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<rect
+									x="9"
+									y="9"
+									width="13"
+									height="13"
+									rx="2"
+									ry="2"
+								></rect>
+								<path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+								></path>
+							</svg>
+						</button>
+					</div>
+
+					<div class="result-item">
+						<div class="result-info">
+							<span class="result-label">Scaled (Uniform)</span>
+							<span class="result-value" id="res-px-u">0px</span>
+						</div>
+						<button
+							class="copy-btn"
+							onclick="copyToClipboard('res-px-u')"
+							aria-label="Copy"
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<rect
+									x="9"
+									y="9"
+									width="13"
+									height="13"
+									rx="2"
+									ry="2"
+								></rect>
+								<path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+								></path>
+							</svg>
+						</button>
+					</div>
+
+					<div class="result-item">
+						<div class="result-info">
+							<span class="result-label">REM</span>
+							<span class="result-value" id="res-rem">0rem</span>
+						</div>
+						<button
+							class="copy-btn"
+							onclick="copyToClipboard('res-rem')"
+							aria-label="Copy"
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<rect
+									x="9"
+									y="9"
+									width="13"
+									height="13"
+									rx="2"
+									ry="2"
+								></rect>
+								<path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+								></path>
+							</svg>
+						</button>
+					</div>
+
+					<div class="result-item">
+						<div class="result-info">
+							<span class="result-label">Viewport Width</span>
+							<span class="result-value" id="res-vw">0vw</span>
+						</div>
+						<button
+							class="copy-btn"
+							onclick="copyToClipboard('res-vw')"
+							aria-label="Copy"
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<rect
+									x="9"
+									y="9"
+									width="13"
+									height="13"
+									rx="2"
+									ry="2"
+								></rect>
+								<path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+								></path>
+							</svg>
+						</button>
+					</div>
+
+					<div class="result-item">
+						<div class="result-info">
+							<span class="result-label">Viewport Height</span>
+							<span class="result-value" id="res-vh">0vh</span>
+						</div>
+						<button
+							class="copy-btn"
+							onclick="copyToClipboard('res-vh')"
+							aria-label="Copy"
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<rect
+									x="9"
+									y="9"
+									width="13"
+									height="13"
+									rx="2"
+									ry="2"
+								></rect>
+								<path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+								></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="toast">Copied to clipboard!</div>
+
+		<script>
+			/**
+			 * DOM ELEMENTS
+			 */
+			const els = {
+				designW: document.getElementById("designWidth"),
+				designH: document.getElementById("designHeight"),
+				actualW: document.getElementById("actualWidth"),
+				actualH: document.getElementById("actualHeight"),
+				rootFont: document.getElementById("rootFont"),
+				figmaVal: document.getElementById("figmaVal"),
+				convertBtn: document.getElementById("convertBtn"),
+				autoBtn: document.getElementById("autoDetectBtn"),
+				themeToggle: document.getElementById("themeToggle"),
+				// Outputs
+				outPxW: document.getElementById("res-px-w"),
+				outPxH: document.getElementById("res-px-h"),
+				outPxU: document.getElementById("res-px-u"),
+				outRem: document.getElementById("res-rem"),
+				outVw: document.getElementById("res-vw"),
+				outVh: document.getElementById("res-vh"),
+			};
+
+			/**
+			 * LOGIC: Calculation
+			 */
+			function calculate() {
+				// 1. Get Values & Parse
+				const dW = parseFloat(els.designW.value) || 1920;
+				const dH = parseFloat(els.designH.value) || 1080;
+				const aW = parseFloat(els.actualW.value) || dW; // Fallback to design width if empty
+				const aH = parseFloat(els.actualH.value) || dH; // Fallback to design height if empty
+				const root = parseFloat(els.rootFont.value) || 16;
+				const val = parseFloat(els.figmaVal.value);
+
+				// If no value entered, reset outputs
+				if (isNaN(val)) {
+					resetOutputs();
+					return;
+				}
+
+				// 2. Compute Scales
+				const widthScale = aW / dW;
+				const heightScale = aH / dH;
+				const uniformScale = Math.min(widthScale, heightScale);
+
+				// 3. Conversions
+				const pxWidth = val * widthScale;
+				const pxHeight = val * heightScale;
+				const pxUniform = val * uniformScale;
+				const rem = val / root;
+				const vw = (val / dW) * 100;
+				const vh = (val / dH) * 100;
+
+				// 4. Update DOM (Precision: 3 decimals)
+				els.outPxW.textContent = `${format(pxWidth)}px`;
+				els.outPxH.textContent = `${format(pxHeight)}px`;
+				els.outPxU.textContent = `${format(pxUniform)}px`;
+				els.outRem.textContent = `${format(rem)}rem`;
+				els.outVw.textContent = `${format(vw)}vw`;
+				els.outVh.textContent = `${format(vh)}vh`;
+			}
+
+			// Helper to format numbers cleanly (remove unnecessary trailing zeros)
+			function format(num) {
+				return parseFloat(num.toFixed(3));
+			}
+
+			function resetOutputs() {
+				const resetVal = "-";
+				els.outPxW.textContent = resetVal;
+				els.outPxH.textContent = resetVal;
+				els.outPxU.textContent = resetVal;
+				els.outRem.textContent = resetVal;
+				els.outVw.textContent = resetVal;
+				els.outVh.textContent = resetVal;
+			}
+
+			/**
+			 * FEATURE: Auto Detect Screen
+			 */
+			function autoDetectScreen() {
+				els.actualW.value = window.innerWidth;
+				els.actualH.value = window.innerHeight;
+				// Trigger calculation updates immediately
+				calculate();
+				showToast(
+					`Detected: ${window.innerWidth}x${window.innerHeight}`
+				);
+			}
+
+			/**
+			 * FEATURE: Dark Mode
+			 */
+			function toggleTheme() {
+				document.body.classList.toggle("dark-mode");
+				const isDark = document.body.classList.contains("dark-mode");
+				els.themeToggle.textContent = isDark
+					? "☀️ Light Mode"
+					: "🌙 Dark Mode";
+			}
+
+			/**
+			 * FEATURE: Copy to Clipboard
+			 */
+			function copyToClipboard(elementId) {
+				const text = document.getElementById(elementId).textContent;
+				if (text === "-") return; // Don't copy placeholder
+
+				navigator.clipboard.writeText(text).then(() => {
+					showToast(`Copied: ${text}`);
+				});
+			}
+
+			function showToast(msg) {
+				const toast = document.getElementById("toast");
+				toast.textContent = msg;
+				toast.classList.add("show");
+				setTimeout(() => {
+					toast.classList.remove("show");
+				}, 2000);
+			}
+
+			/**
+			 * INITIALIZATION & EVENT LISTENERS
+			 */
+			// Live update on any input change
+			const inputs = document.querySelectorAll("input");
+			inputs.forEach((input) => {
+				input.addEventListener("input", calculate);
+			});
+
+			// Button Listeners
+			els.convertBtn.addEventListener("click", calculate);
+			els.autoBtn.addEventListener("click", autoDetectScreen);
+			els.themeToggle.addEventListener("click", toggleTheme);
+
+			// Initial run to populate default detect
+			window.addEventListener("load", () => {
+				// Optional: Uncomment next line if you want auto-detect on load immediately
+				// autoDetectScreen();
+			});
+		</script>
+	</body>
+</html>

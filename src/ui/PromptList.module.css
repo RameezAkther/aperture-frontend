@@ -1,0 +1,61 @@
+.listContainer {
+	display: flex;
+	flex-direction: column;
+	/* gap: 2rem; */
+	padding-top: 1rem;
+	width: 100%;
+}
+
+/* --- User Message --- */
+.userMsgWrapper {
+	background-color: #1e1e1e;
+	padding: 1.5rem;
+	border-radius: 20px 20px 0px 0px;
+	color: #d1d1d1;
+	font-size: 1rem;
+	line-height: 1.5;
+	white-space: pre-wrap;
+	margin-top: 2rem;
+	z-index: 5;
+}
+
+/* --- System Message --- */
+.systemMsgWrapper {
+	padding: 2.5rem 0.5rem 0.5rem 1.5rem;
+	border-left: 3px solid #f4d03f; /* The Yellow Accent */
+	color: #e3e3e3;
+	font-size: 1rem;
+	line-height: 1.6;
+	position: relative;
+	white-space: pre-wrap;
+	margin-top: -1rem;
+	border-radius: 0px 0px 20px 20px;
+	background-color: #161616;
+}
+
+.msgFooter {
+	display: flex;
+	gap: 5px;
+	justify-content: flex-end;
+}
+
+.footerBtn {
+	background: #1e1e1e;
+	border: none;
+	border-radius: 20px;
+	padding: 10px;
+	color: #888;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.2s;
+}
+
+.footerBtn:hover {
+	background: #333;
+}
+
+.footerBtnIcon {
+	height: 15px;
+}

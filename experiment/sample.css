@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Jersey+10&display=swap");
+
+body {
+	margin: 0;
+	background: #111;
+	font-family: Inconsolata, sans-serif;
+	color: #fff;
+}
+
+/* Sidebar container */
+.sidebar {
+	width: 307px;
+	height: 100vh;
+	background: #000;
+	padding: 8px;
+	box-sizing: border-box;
+	overflow: hidden;
+	transition: width 0.25s ease;
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+	width: 70px;
+}
+
+/* Logo section */
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 25px;
+}
+
+.logo-icon {
+	width: 26px;
+}
+
+.logo-text {
+	font-weight: 600;
+	font-size: 18px;
+}
+
+.sidebar.collapsed .logo-text {
+	display: none;
+}
+
+/* Toggle Button */
+.toggle-btn {
+	background: none;
+	color: #fff;
+	border: none;
+	font-size: 22px;
+	cursor: pointer;
+	margin-bottom: 20px;
+}
+
+.menu,
+.projects {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.menu li,
+.projects li {
+	padding: 10px 12px;
+	border-radius: 25px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.menu li:hover,
+.projects li:hover {
+	background: #1b1b1b;
+}
+
+.icon {
+	width: 20px;
+}
+
+.section-title {
+	margin: 25px 0 10px;
+	font-size: 12px;
+	opacity: 0.5;
+}
+
+.settings {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+}
+
+.sidebar.collapsed .label,
+.sidebar.collapsed .section-title {
+	display: none;
+}
+
+.sidebar.collapsed .projects li,
+.sidebar.collapsed .menu li {
+	justify-content: center;
+}

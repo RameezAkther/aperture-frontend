@@ -1,0 +1,150 @@
+.inputContainer {
+	background-color: #2a2a2a;
+	border-radius: 25px;
+	padding: 12px;
+	padding-top: 20px;
+	padding-right: 12px; /* Reduced slightly to account for scrollbar width */
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.textArea {
+	background: transparent;
+	border: none;
+	resize: none;
+	color: #fff;
+	font-family: inherit;
+	font-size: 1rem;
+	line-height: 1.5; /* Important for calculating row height */
+	outline: none;
+	padding-left: 10px;
+
+	/* Auto-Resize Constraints */
+	min-height: 24px; /* 1 Row */
+	max-height: 100px; /* ~4 Rows (1.5rem * 4 + padding wiggle room) */
+	overflow-y: auto; /* Scrollbar appears only after max-height is reached */
+}
+
+/* --- Custom Scrollbar for Textarea --- */
+.textArea::-webkit-scrollbar {
+	width: 6px;
+}
+.textArea::-webkit-scrollbar-thumb {
+	background-color: #444;
+	border-radius: 3px;
+}
+.textArea::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* --- Toolbar --- */
+.toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 10px; /* Aligns with input padding */
+}
+
+.toolbarLeft {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.toolBtnIcon {
+	width: 10px;
+}
+
+.toolBtn {
+	background: #1e1e1e;
+	border: none;
+	border-radius: 20px;
+	padding: 10px;
+	color: #888;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.2s;
+}
+
+.toolBtn:hover {
+	background: #333;
+}
+
+.toolBtn img {
+	width: 20px;
+	height: 20px;
+	display: block; /* Removes implicit line-height spacing on images */
+}
+
+/* --- Context Pills --- */
+.pillContainer {
+	display: flex;
+	gap: 10px;
+}
+
+.pill {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background-color: #1e1e1e;
+	border-radius: 18px;
+	padding: 6px 15px;
+	font-size: 0.95rem; /* Slightly smaller text for balance */
+	font-weight: 600;
+	color: #d0d0d0;
+	transition: background-color 0.2s, color 0.2s;
+	user-select: none;
+}
+
+/* Hover Effect for Pill Buttons */
+.pill:hover {
+	background-color: #333;
+	color: #fff;
+}
+
+.pillClose {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	padding: 0;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+}
+
+.pillClose:hover {
+	opacity: 1;
+}
+
+.pillClose img {
+	width: 10px;
+	height: 10px;
+}
+
+/* --- Right Side --- */
+.toolbarRight {
+	display: flex;
+	align-items: center;
+}
+
+.sendBtn {
+	background: transparent; /* Assuming you want icon only, or set color */
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px; /* Touch target size */
+	border-radius: 50%; /* Circular hover effect if bg added */
+	transition: background 0.2s;
+}
+
+.sendBtn img {
+	width: 24px;
+	height: 24px;
+}

@@ -1,0 +1,158 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600&display=swap");
+
+.container {
+	/* Fixed width or responsive, based on your layout needs */
+	width: 440px;
+	height: 100%;
+	background-color: #111; /* Slightly lighter than the absolute black Sidebar */
+	padding: 10px;
+	box-sizing: border-box;
+	border-right: 1px solid #222;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	font-family: "Inconsolata", monospace;
+
+	box-sizing: border-box;
+}
+
+.card {
+	background-color: #1a1a1a;
+	border-radius: 8px;
+	overflow: hidden;
+	border: 1px solid transparent;
+	transition: border-color 0.2s ease;
+}
+
+.card:hover {
+	border-color: #333;
+}
+
+/* --- Header Styling --- */
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 6px 6px 6px 14px;
+	cursor: pointer;
+	user-select: none;
+	color: #e3e3e3;
+	transition: background-color 0.15s;
+}
+
+.header:hover {
+	background-color: #252525;
+}
+
+.titleGroup {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.mainIcon {
+	color: #fff;
+	display: flex; /* Fixes svg alignment */
+}
+
+.titleText {
+	font-size: 0.95rem;
+	font-weight: 500;
+}
+
+/* The small arrow next to "Session" */
+.chevron {
+	display: flex;
+	align-items: center;
+	color: #888;
+	transition: transform 0.2s ease;
+	margin-left: -4px; /* Pull it closer to text like screenshot */
+}
+
+.rotate {
+	transform: rotate(180deg);
+}
+
+/* --- Right Side Actions --- */
+.actions {
+	display: flex;
+	align-items: center;
+}
+
+.actionGroup {
+	display: flex;
+	align-items: center;
+	gap: 4px; /* Space between the small icons */
+}
+
+.iconBtn {
+	background: transparent;
+	border: none;
+	color: #666;
+	cursor: pointer;
+	padding: 4px;
+	border-radius: 4px;
+	transition: color 0.2s, background 0.2s;
+
+	width: 30px;
+	height: 30px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	opacity: 0.7;
+}
+
+.iconBtn:hover {
+	color: #fff;
+	opacity: 1;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Content Body --- */
+.content {
+	padding: 0px 5px 5px 5px;
+	border-top: 1px solid #222;
+}
+
+/* Just styling for the empty placeholders */
+.placeholderLine {
+	height: 6px;
+	background-color: #2a2a2a;
+	border-radius: 3px;
+	margin-top: 10px;
+	width: 100%;
+}
+
+.mainIconSize {
+	height: auto;
+	width: 15px;
+}
+
+.addIconSize {
+	width: 80%;
+	height: 80%;
+	object-fit: contain;
+}
+
+.sessionContent {
+	height: fit-content;
+}
+
+/* Makes the card itself expand to fill empty space */
+.flexGrowCard {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: 0; /* CRITICAL: Allows flex child to shrink below content size to trigger scroll */
+}
+
+/* Updates the content area to fill the card's expanded space */
+.flexContent {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden; /* Prevents double scrollbars */
+	min-height: 0;
+	padding: 0; /* Remove padding here if handled inside the child */
+}
