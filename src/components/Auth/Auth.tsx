@@ -1,122 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Auth.css";
+import { useAuthLogic } from "./useAuthLogic";
+import { AuthEditor } from "./AuthEditor";
+import { AuthBottomPanel } from "./AuthBottomPanel";
 
 interface AuthProps {
 	onLogin: () => void;
 }
 
 export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
-	const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
-	const [activePanel, setActivePanel] = useState<"terminal" | "problems">(
-		"terminal"
-	);
-
-	// Form State
-	const [formData, setFormData] = useState({
-		email: "",
-		password: "",
-		username: "",
-	});
-
-	// Linter State (Validation Errors)
-	const [errors, setErrors] = useState<{ [key: string]: string }>({});
-	const [terminalLogs, setTerminalLogs] = useState<string[]>([
-		"Initializing Aperture Security Protocol...",
-		"Loading language server...",
-	]);
-
-	// "Linter" Logic
-	const validateField = (name: string, value: string) => {
-		let errorMsg = "";
-
-		if (name === "email") {
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(value) && value.length > 0)
-				errorMsg = "Type 'string' is not assignable to type 'Email'.";
-		}
-
-		if (name === "password") {
-			if (value.length < 6 && value.length > 0)
-				errorMsg = "Password literal is too short (min 6 chars).";
-		}
-
-		if (name === "username" && activeTab === "signup") {
-			if (value.length < 3 && value.length > 0)
-				errorMsg = "Identifier expected to be > 3 chars.";
-		}
-
-		setErrors((prev) => {
-			const newErrors = { ...prev };
-			if (errorMsg) newErrors[name] = errorMsg;
-			else delete newErrors[name];
-			return newErrors;
-		});
-	};
-
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setFormData({ ...formData, [name]: value });
-		validateField(name, value);
-	};
-
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-
-		// Check for empty fields (Compiler Error)
-		const newErrors: { [key: string]: string } = {};
-		if (!formData.email)
-			newErrors.email = "Argument 'email' cannot be undefined.";
-		if (!formData.password)
-			newErrors.password = "Argument 'password' cannot be undefined.";
-		if (activeTab === "signup" && !formData.username)
-			newErrors.username = "Argument 'username' cannot be undefined.";
-
-		// Check existing errors
-		const hasErrors =
-			Object.keys(errors).length > 0 || Object.keys(newErrors).length > 0;
-
-		if (hasErrors) {
-			setErrors((prev) => ({ ...prev, ...newErrors }));
-			setActivePanel("problems"); // Auto-switch to Problems tab
-			setTerminalLogs((prev) => [
-				...prev,
-				`> [ERROR] Build failed with ${
-					Object.keys(newErrors).length + Object.keys(errors).length
-				} errors.`,
-			]);
-			return;
-		}
-
-		// Success Sequence
-		setActivePanel("terminal");
-		setTerminalLogs((prev) => [
-			...prev,
-			`> Compiling ${activeTab} sequence...`,
-		]);
-		setTerminalLogs((prev) => [
-			...prev,
-			`> POST /api/auth/${activeTab} [PENDING]`,
-		]);
-
-		setTimeout(() => {
-			setTerminalLogs((prev) => [
-				...prev,
-				`> 200 OK. Session Token: ax99-f771-b2`,
-			]);
-			setTimeout(onLogin, 1000);
-		}, 1200);
-	};
-
-	// Helper to render line number with optional error indicator
-	const renderLineNumber = (num: number, fieldName?: string) => {
-		const hasError = fieldName && errors[fieldName];
-		return (
-			<div className="line-num-wrapper" key={num}>
-				{num}
-				{hasError && <span className="gutter-error"></span>}
-			</div>
-		);
-	};
+	// Destructure all the logic, state, and handlers from the hook
+	const {
+		activeTab,
+		switchTab,
+		activePanel,
+		setActivePanel,
+		formData,
+		errors,
+		terminalLogs,
+		isLoading,
+		handleInputChange,
+		handleFileUpload,
+		handleSubmit,
+		clearLogs,
+	} = useAuthLogic({ onLogin });
 
 	const errorCount = Object.keys(errors).length;
 
@@ -128,9 +35,10 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 			<div
 				className={`ide-window ${errorCount > 0 ? "window-shake" : ""}`}
 			>
-				{/* Activity Bar */}
+				{/* --- LEFT SIDEBAR (Activity Bar) --- */}
 				<div className="activity-bar">
 					<div className="icon active">
+						{/* Files Icon */}
 						<svg
 							viewBox="0 0 24 24"
 							width="24"
@@ -151,6 +59,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 						</svg>
 					</div>
 					<div className="icon">
+						{/* Git/Source Control Icon */}
 						<svg
 							viewBox="0 0 24 24"
 							width="24"
@@ -165,22 +74,34 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 							<line x1="6" y1="9" x2="6" y2="21"></line>
 						</svg>
 					</div>
+					<div className="spacer"></div>
+					<div className="icon">
+						{/* Settings Icon */}
+						<svg
+							viewBox="0 0 24 24"
+							width="24"
+							height="24"
+							stroke="currentColor"
+							strokeWidth="1.5"
+							fill="none"
+						>
+							<circle cx="12" cy="12" r="3"></circle>
+							<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+						</svg>
+					</div>
 				</div>
 
 				<div className="main-editor-area">
-					{/* Tabs */}
+					{/* --- TOP TABS --- */}
 					<div className="ide-tabs">
 						<div
 							className={`tab ${
 								activeTab === "login" ? "active" : ""
 							}`}
-							onClick={() => {
-								setActiveTab("login");
-								setErrors({});
-							}}
+							onClick={() => switchTab("login")}
 						>
 							<span className="ts-icon">TS</span> Login.tsx{" "}
-							{errorCount > 0 && (
+							{errorCount > 0 && activeTab === "login" && (
 								<span className="tab-error-dot">●</span>
 							)}
 						</div>
@@ -188,13 +109,20 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 							className={`tab ${
 								activeTab === "signup" ? "active" : ""
 							}`}
-							onClick={() => {
-								setActiveTab("signup");
-								setErrors({});
-							}}
+							onClick={() => switchTab("signup")}
 						>
 							<span className="ts-icon">TS</span> Signup.tsx
+							{errorCount > 0 && activeTab === "signup" && (
+								<span className="tab-error-dot">●</span>
+							)}
 						</div>
+						{/* Recovery Tab (Transient, only shows when active) */}
+						{activeTab === "recovery" && (
+							<div className="tab active italic">
+								<span className="ts-icon">TS</span> recovery.ts
+							</div>
+						)}
+
 						<div className="tab-spacer"></div>
 						<div className="window-controls">
 							<span className="dot yellow"></span>
@@ -203,203 +131,29 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 						</div>
 					</div>
 
-					{/* Editor */}
-					<div className="ide-editor">
-						<div className="line-numbers">
-							{[1, 2, 3, 4, 5, 6].map((n) => renderLineNumber(n))}
-							{activeTab === "signup" &&
-								renderLineNumber(7, "username")}
-							{renderLineNumber(
-								activeTab === "signup" ? 8 : 7,
-								"email"
-							)}
-							{renderLineNumber(
-								activeTab === "signup" ? 9 : 8,
-								"password"
-							)}
-							{[10, 11, 12, 13, 14].map((n) =>
-								renderLineNumber(
-									n + (activeTab === "signup" ? 9 : 8)
-								)
-							)}
-						</div>
+					{/* --- MAIN EDITOR COMPONENT --- */}
+					<AuthEditor
+						activeTab={activeTab}
+						switchTab={switchTab}
+						errors={errors}
+						handleInputChange={handleInputChange}
+						handleFileUpload={handleFileUpload}
+						handleSubmit={handleSubmit}
+						isLoading={isLoading}
+						formData={formData}
+					/>
 
-						<form className="code-area" onSubmit={handleSubmit}>
-							<div className="code-line">
-								<span className="keyword">import</span>{" "}
-								<span className="variable">UserSession</span>{" "}
-								<span className="keyword">from</span>{" "}
-								<span className="string">'@aperture/core'</span>
-								;
-							</div>
-							<div className="code-line empty"></div>
-							<div className="code-line comment">
-								// TODO: Credentials check. Throws Error on
-								Fail.
-							</div>
-							<div className="code-line">
-								<span className="keyword">export const</span>{" "}
-								<span className="function">auth</span> ={" "}
-								<span className="keyword">async</span> (){" "}
-								<span className="arrow">=&gt;</span> &#123;
-							</div>
+					{/* --- BOTTOM PANEL COMPONENT --- */}
+					<AuthBottomPanel
+						activePanel={activePanel}
+						setActivePanel={setActivePanel}
+						terminalLogs={terminalLogs}
+						errors={errors}
+						activeTab={activeTab}
+						clearLogs={clearLogs}
+					/>
 
-							<div className="code-block-content">
-								{activeTab === "signup" && (
-									<div className="input-line">
-										<label className="variable">
-											username:
-										</label>
-										<input
-											type="text"
-											name="username"
-											className={`code-input string ${
-												errors.username
-													? "error-squiggly"
-													: ""
-											}`}
-											placeholder='"Display Name"'
-											autoComplete="off"
-											onChange={handleInputChange}
-										/>
-										<span className="semicolon">,</span>
-									</div>
-								)}
-
-								<div className="input-line">
-									<label className="variable">email:</label>
-									<input
-										type="email"
-										name="email"
-										className={`code-input string ${
-											errors.email ? "error-squiggly" : ""
-										}`}
-										placeholder='"user@example.com"'
-										autoComplete="off"
-										onChange={handleInputChange}
-									/>
-									<span className="semicolon">,</span>
-								</div>
-
-								<div className="input-line">
-									<label className="variable">
-										password:
-									</label>
-									<input
-										type="password"
-										name="password"
-										className={`code-input variable ${
-											errors.password
-												? "error-squiggly"
-												: ""
-										}`}
-										placeholder='"********"'
-										onChange={handleInputChange}
-									/>
-									<span className="semicolon">;</span>
-								</div>
-
-								<div className="code-line empty"></div>
-								<div className="code-line">
-									<span className="keyword">return</span>{" "}
-									<span className="function">
-										UserSession
-									</span>
-									.<span className="function">init</span>();
-								</div>
-							</div>
-							<div className="code-line">&#125;;</div>
-
-							<div className="action-area">
-								<button type="submit" className="debug-btn">
-									<span className="play-icon">▶</span>{" "}
-									{activeTab === "login"
-										? "RUN_DEBUG"
-										: "BUILD_USER"}
-								</button>
-							</div>
-						</form>
-					</div>
-
-					{/* Bottom Panel (Terminal / Problems) */}
-					<div className="ide-bottom-panel">
-						<div className="panel-header">
-							<span
-								className={
-									activePanel === "problems"
-										? "active-tab"
-										: ""
-								}
-								onClick={() => setActivePanel("problems")}
-							>
-								PROBLEMS{" "}
-								{errorCount > 0 && (
-									<span className="badge">{errorCount}</span>
-								)}
-							</span>
-							<span
-								className={
-									activePanel === "terminal"
-										? "active-tab"
-										: ""
-								}
-								onClick={() => setActivePanel("terminal")}
-							>
-								TERMINAL
-							</span>
-							<span>OUTPUT</span>
-						</div>
-
-						<div className="panel-body">
-							{activePanel === "terminal" ? (
-								<>
-									{terminalLogs.map((log, i) => (
-										<div key={i} className="term-line">
-											<span className="term-path">
-												root@aperture:~$
-											</span>{" "}
-											{log}
-										</div>
-									))}
-									<div className="term-cursor">_</div>
-								</>
-							) : (
-								<div className="problems-list">
-									{errorCount === 0 ? (
-										<div className="no-problems">
-											No problems have been detected in
-											the workspace.
-										</div>
-									) : (
-										Object.entries(errors).map(
-											([field, msg], i) => (
-												<div
-													key={i}
-													className="problem-item"
-												>
-													<span className="error-icon">
-														ⓧ
-													</span>
-													<span className="error-msg">
-														{msg}
-													</span>
-													<span className="error-loc">
-														[{field}] Ln{" "}
-														{activeTab === "signup"
-															? i + 7
-															: i + 6}
-														, Col 12
-													</span>
-												</div>
-											)
-										)
-									)}
-								</div>
-							)}
-						</div>
-					</div>
-
-					{/* Status Bar */}
+					{/* --- STATUS BAR --- */}
 					<div className="ide-status-bar">
 						<div className="status-left">
 							<span className="remote-icon">
@@ -415,6 +169,18 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 									<span>0 Errors</span>
 								)}
 							</span>
+							{isLoading && (
+								<span style={{ marginLeft: "10px" }}>
+									Building...
+								</span>
+							)}
+						</div>
+						<div className="status-right">
+							<span>
+								Ln {activeTab === "signup" ? 16 : 12}, Col 1
+							</span>
+							<span>UTF-8</span>
+							<span>TypeScript React</span>
 						</div>
 					</div>
 				</div>
