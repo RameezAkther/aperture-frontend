@@ -1,0 +1,72 @@
+.folder-container {
+	user-select: none;
+	font-family: "Inconsolata", monospace;
+}
+
+.folder-header {
+	display: flex;
+	align-items: center;
+	padding: 6px 10px;
+	cursor: pointer;
+	color: #999;
+	transition: background 0.1s, color 0.1s;
+	border-radius: 6px;
+	margin-bottom: 2px;
+}
+
+.folder-header:hover {
+	background: #1e1e1e;
+	color: white;
+}
+
+/* Visual feedback when dragging a file OVER the folder */
+.folder-header.drag-target {
+	background: rgba(74, 222, 128, 0.2); /* Subtle green tint */
+	border: 1px dashed #4ade80;
+}
+
+.folder-icon-area {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-right: 8px;
+	min-width: 36px; /* Align text with files */
+}
+
+.folder-chevron {
+	display: flex;
+	align-items: center;
+	color: #555;
+}
+
+.folder-svg {
+	width: 16px;
+	height: 16px;
+}
+
+.folder-name {
+	flex: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 0.95rem;
+}
+
+.folder-menu-btn {
+	background: transparent;
+	border: none;
+	opacity: 0;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.folder-header:hover .folder-menu-btn {
+	opacity: 1;
+}
+
+.folder-menu-btn:hover {
+	background: rgba(255, 255, 255, 0.1);
+}

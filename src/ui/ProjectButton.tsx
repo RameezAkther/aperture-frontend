@@ -1,11 +1,13 @@
+// src/ui/ProjectButton.tsx
 import React from "react";
 import "./ProjectButton.css";
 
 type Props = {
 	text: string;
 	icon: React.ReactNode;
-	onClick?: () => void; // Kliks the whole row (Open Project)
-	onMenuClick?: (e: React.MouseEvent) => void; // Clicks just the dots
+	onClick?: () => void;
+	onMenuClick?: (e: React.MouseEvent) => void;
+	menuComponent?: React.ReactNode;
 };
 
 const ProjectButton: React.FC<Props> = ({
@@ -13,10 +15,16 @@ const ProjectButton: React.FC<Props> = ({
 	icon,
 	onClick,
 	onMenuClick,
+	menuComponent,
 }) => {
 	const handleIconClick = (e: React.MouseEvent) => {
-		e.stopPropagation(); // Prevents opening the project
+		e.stopPropagation(); // Stops opening the project when clicking dots
 		onMenuClick?.(e);
+	};
+
+	// NEW: Wrapper to stop menu clicks from bubbling up to the row
+	const handleMenuWrapperClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
 	};
 
 	return (
@@ -25,21 +33,32 @@ const ProjectButton: React.FC<Props> = ({
 			onClick={onClick}
 			role="button"
 			tabIndex={0}
+			// Z-Index fix: If menu is open (menuComponent exists), raise this row above others
+			style={{ zIndex: menuComponent ? 20 : 1, position: "relative" }}
 		>
-			{/* Wrapper ensures text creates space for the cursor */}
 			<div className="text-container">
 				<span className="project-text">{text}</span>
-				{/* The cursor is now a separate span so flexbox respects it */}
 				<span className="cursor-underscore">_</span>
 			</div>
 
-			<button
-				className="project-icon-wrapper"
-				onClick={handleIconClick}
-				aria-label="Project options"
-			>
-				<span className="project-icon">{icon}</span>
-			</button>
+			<div style={{ position: "relative" }}>
+				<button
+					className="project-icon-wrapper"
+					onClick={handleIconClick}
+				>
+					<span className="project-icon">{icon}</span>
+				</button>
+
+				{/* Wrap menu to stop bubbling */}
+				{menuComponent && (
+					<div
+						onClick={handleMenuWrapperClick}
+						style={{ position: "absolute", right: 0, top: "100%" }}
+					>
+						{menuComponent}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

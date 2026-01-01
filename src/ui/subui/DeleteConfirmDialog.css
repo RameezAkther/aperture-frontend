@@ -1,0 +1,62 @@
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.6);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	/* CRITICAL FIX: Ensure this is higher than the Sidebar's z-index */
+	z-index: 9999;
+	backdrop-filter: blur(2px);
+}
+
+.modal-content {
+	background: #1e1e1e;
+	padding: 30px;
+	border-radius: 20px;
+	width: 550px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+	color: white;
+	font-family: "Inconsolata";
+}
+
+.modal-content h3 {
+	margin-top: 0;
+	font-size: 1.2rem;
+}
+.modal-content p {
+	color: #ccc;
+	font-size: 1rem;
+	margin-bottom: 24px;
+	margin-top: 12px;
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+}
+
+.btn-cancel {
+	background: transparent;
+	color: white;
+	padding: 8px 16px;
+	border-radius: 20px;
+	cursor: pointer;
+}
+
+.btn-delete {
+	background: #c92a2a;
+	border: none;
+	color: white;
+	padding: 8px 16px;
+	border-radius: 20px;
+	cursor: pointer;
+}
+.btn-delete:hover {
+	background: #e03131;
+}

@@ -1,0 +1,178 @@
+/* --- Reusing your Base Modal Styles --- */
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.6);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+	backdrop-filter: blur(2px);
+}
+
+.modal-content {
+	background: #1e1e1e;
+	padding: 30px;
+	border-radius: 20px;
+	width: 550px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+	color: white;
+	font-family: "Inconsolata", monospace;
+	display: flex;
+	flex-direction: column;
+	max-height: 85vh; /* Prevent it from being too tall on small screens */
+}
+
+.modal-content h3 {
+	margin-top: 0;
+	font-size: 1.2rem;
+	margin-bottom: 0;
+}
+.modal-content p {
+	color: #888;
+	font-size: 0.95rem;
+	margin-bottom: 20px;
+	margin-top: 8px;
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	margin-top: 14px;
+}
+
+/* --- Buttons --- */
+.btn-cancel {
+	background: transparent;
+	color: #aaa;
+	padding: 10px 20px;
+	border-radius: 20px;
+	cursor: pointer;
+	border: none;
+	font-family: inherit;
+	transition: color 0.2s;
+}
+.btn-cancel:hover {
+	color: white;
+}
+
+.btn-confirm {
+	background: white;
+	color: black; /* Standard "Primary" for dark mode */
+	border: none;
+	padding: 10px 24px;
+	border-radius: 30px;
+	cursor: pointer;
+	font-family: inherit;
+	font-weight: 600;
+	transition: transform 0.1s, opacity 0.2s;
+}
+.btn-confirm:hover {
+	opacity: 0.9;
+}
+.btn-confirm:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+
+/* --- New Styles for Folder Logic --- */
+
+/* 1. The Search/Create Input */
+.input-group {
+	display: flex;
+	align-items: center;
+	background: #111;
+	border: 1px solid #333;
+	border-radius: 12px;
+	padding: 12px 16px;
+	transition: border-color 0.2s;
+}
+.input-group:focus-within {
+	border-color: #666;
+}
+
+.input-icon {
+	color: #666;
+	margin-right: 12px;
+}
+.input-icon.highlight {
+	color: #4ade80; /* Green for create */
+}
+
+.folder-input {
+	background: transparent;
+	border: none;
+	color: white;
+	font-family: inherit;
+	font-size: 1rem;
+	width: 100%;
+	outline: none;
+}
+
+/* 2. The Scrollable List */
+.folder-list-container {
+	flex: 1;
+	overflow-y: auto;
+	margin: 0 -10px; /* Pull out to edges slightly */
+	padding: 0 10px;
+
+	/* Scrollbar styling */
+	scrollbar-width: thin;
+	scrollbar-color: #444 transparent;
+}
+
+.section-label {
+	font-size: 0.75rem;
+	color: #555;
+	letter-spacing: 1px;
+	margin: 12px 0 12px 0;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.folder-item {
+	display: flex;
+	align-items: center;
+	padding: 10px 14px;
+	border-radius: 10px;
+	cursor: pointer;
+	color: #ccc;
+	transition: background 0.1s, color 0.1s;
+	margin-bottom: 4px;
+}
+
+.folder-item:hover {
+	background: #2a2a2a;
+	color: white;
+}
+
+.folder-item.selected {
+	background: #333;
+	color: white;
+	border: 1px solid #444;
+}
+
+.folder-item svg {
+	margin-right: 12px;
+	color: #666;
+}
+.folder-item.selected svg {
+	color: white;
+}
+
+.check-icon {
+	margin-left: auto;
+	color: #4ade80 !important;
+}
+
+.empty-state {
+	padding: 20px;
+	text-align: center;
+	color: #555;
+	font-style: italic;
+}
