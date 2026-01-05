@@ -1,129 +1,172 @@
-/* src/ui/FileExplorer.module.css */
+/* src/ui/explorer/FileExplorer.module.css */
 
 .explorerContainer {
   font-family: 'Inconsolata', monospace;
   color: #cccccc;
   font-size: 14px;
   user-select: none;
-  padding-top: 8px;
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-/* --- Node Row Styling --- */
+/* ───────────────── Toolbar ───────────────── */
+
+.toolbar {
+  padding: 8px;
+  border-bottom: 1px solid #2a2a2a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.toolbarTitle {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.toolbarBtn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+}
+
+.toolbarBtn:hover {
+  color: #ffffff;
+}
+
+/* ───────────────── Tree Layout ───────────────── */
+
+.nodeContainer {
+  display: flex;
+  flex-direction: column;
+}
+
 .nodeRow {
   display: flex;
   align-items: center;
   height: 28px;
   padding-right: 8px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.1s;
-  position: relative;
-  /* Default CSS var for fill, overridden by inline style from React */
-  --icon-fill: 0;
+  border: 1px solid transparent;
+  color: #fff;
 }
 
 .nodeRow:hover {
-  background-color: #2a2d2e;
-}
-
-/* Force icons to fill on hover */
-.nodeRow:hover .iconBase {
-  --icon-fill: 1 !important;
+  background-color: #262a2e;
+  border-radius: 30px;
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
 }
 
 .nodeRow.selected {
-  background-color: #37373d; /* VS Code style selection */
+  background-color: #393939;
   color: #ffffff;
+  border-radius: 30px;
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
 }
 
-.nodeRow:hover .actions {
-  opacity: 1;
+/* ───────────────── Drag & Drop ───────────────── */
+
+.nodeRow.dragOver {
+  background-color: #1e2429;
+  border: 2px dashed #00d9ff;
 }
 
-/* --- Content Group --- */
+/* ───────────────── Content ───────────────── */
+
 .nodeContent {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-grow: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* --- Text --- */
 .nodeText {
-  color: inherit; /* Inherit from nodeRow for selection contrast */
-  line-height: 1;
   padding-top: 2px;
 }
 
-/* --- Icons --- */
-.iconBase {
-  font-size: 20px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  /* Smooth transition for the fill effect */
-  transition: font-variation-settings 0.2s ease;
+/* ───────────────── Inline Input ───────────────── */
+
+.inlineInput {
+  background: #1e1e1e;
+  border: 1px solid #00d9ff;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 2px 4px;
+  outline: none;
+  margin-left: 6px;
+  width: 100%;
 }
 
-.chevronContainer {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
+/* ───────────────── Actions (Hover) ───────────────── */
 
-.chevron {
-  color: #888;
-  font-size: 20px !important;
-}
-
-/* Icon Colors */
-.folderIcon {
-  color: #dcb67a;
-}
-.fileIcon {
-  color: #8aa4c9;
-}
-.pdfIcon {
-  color: #e06c75;
-}
-.imgIcon {
-  color: #c678dd;
-}
-
-/* --- Quick Actions --- */
 .actions {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   opacity: 0;
-  transition: opacity 0.2s;
-  margin-left: auto;
+  transition: opacity 0.1s ease;
+}
+
+.nodeRow:hover .actions {
+  opacity: 1;
 }
 
 .actionBtn {
   background: none;
   border: none;
+  color: #9aa7b2;
   cursor: pointer;
-  color: #888;
-  padding: 2px;
-  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2px;
+  border-radius: 3px;
 }
 
 .actionBtn:hover {
-  color: #fff;
-  background-color: #3e3e3e;
+  color: #ffffff;
+  background-color: #3a3f45;
 }
 
-.actionBtn .iconBase {
-  font-size: 16px !important;
+/* ───────────────── Parsing Status Icons ───────────────── */
+
+.statusIcon {
+  font-size: 15px !important;
+  margin-left: auto;
+  margin-right: 4px;
+}
+
+/* Sharp Green */
+.success {
+  color: #00ff88;
+}
+
+/* Sharp Red */
+.error {
+  color: #ff3b3b;
+}
+
+/* Sharp Cyan */
+.loading {
+  color: #00d9ff;
+  animation: spin 0.9s linear infinite;
+}
+
+/* ───────────────── Animations ───────────────── */
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
 }

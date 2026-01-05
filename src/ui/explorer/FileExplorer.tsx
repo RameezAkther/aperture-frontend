@@ -1,262 +1,128 @@
-import React, { useState } from 'react';
+import React, {
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
+import { useFileTree } from './useFileTree';
+import { FileNodeItem } from './FileNodeItem';
 import styles from './FileExplorer.module.css';
+import type { FileNode } from './types';
 
-// --- Types ---
-type FileType = 'folder' | 'file' | 'image' | 'pdf';
-
-interface FileNode {
-  id: string;
-  name: string;
-  type: FileType;
-  children?: FileNode[];
-  isOpen?: boolean;
+// Define the interface for the Ref
+export interface FileExplorerRef {
+  triggerImport: () => void;
 }
 
-// --- Reusable Icon Component ---
-// Uses CSS variables to handle the mix of State (React) and Hover (CSS) logic
-const Icon = ({
-  name,
-  className,
-  filled,
-}: {
-  name: string;
-  className?: string;
-  filled: boolean;
-}) => (
-  <span
-    className={`material-symbols-rounded ${className || ''} ${styles.iconBase}`}
-    style={
-      {
-        '--icon-fill': filled ? 1 : 0,
-        fontVariationSettings: `'FILL' var(--icon-fill)`,
-      } as React.CSSProperties
-    }
-  >
-    {name}
-  </span>
-);
-
-// --- Initial Mock Data ---
-const initialData: FileNode = {
-  id: 'root',
-  name: 'Code Base',
-  type: 'folder',
-  isOpen: true,
-  children: [
-    {
-      id: '1',
-      name: 'src',
-      type: 'folder',
-      children: [],
-    },
-    {
-      id: '2',
-      name: 'assets',
-      type: 'folder',
-      children: [],
-    },
-    {
-      id: '3',
-      name: 'documentation.pdf',
-      type: 'pdf',
-    },
-    {
-      id: '4',
-      name: 'design_mockup.png',
-      type: 'image',
-    },
-  ],
-};
-
-// --- Recursive Node Component ---
-const FileNodeItem: React.FC<{
-  node: FileNode;
-  depth: number;
-  selectedId: string | null;
-  onSelect: (id: string) => void;
-  onToggle: (id: string) => void;
-  onAdd: (parentId: string, type: 'file' | 'folder', name: string) => void;
-}> = ({ node, depth, selectedId, onSelect, onToggle, onAdd }) => {
-  const isSelected = node.id === selectedId;
-
-  // Logic: Filled if Selected OR (Folder is Collapsed)
-  // Hover fill is handled in CSS
-  const isFilledState = isSelected || (node.type === 'folder' && !node.isOpen);
-
-  const handleAdd = (e: React.MouseEvent, type: 'file' | 'folder') => {
-    e.stopPropagation();
-    const name = window.prompt(`Enter name for new ${type}:`);
-    if (name) onAdd(node.id, type, name);
-  };
-
-  const handleNodeClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSelect(node.id);
-    if (node.type === 'folder') {
-      onToggle(node.id);
-    }
-  };
-
-  const getIconConfig = (type: FileType, isOpen?: boolean) => {
-    switch (type) {
-      case 'folder':
-        return {
-          // Standard: Open folder shows 'folder_open', Closed shows 'folder'
-          // But user wants filled behavior specific to state.
-          // We can stick to the generic 'folder' shape for both states if we rely solely on FILL to distinguish,
-          // OR switch shapes. Standard UX usually switches shapes.
-          // Let's use 'folder' for closed and 'folder_open' for open, but apply the FILL logic requested.
-          name: isOpen ? 'folder_open' : 'folder',
-          className: styles.folderIcon,
-        };
-      case 'pdf':
-        return { name: 'picture_as_pdf', className: styles.pdfIcon };
-      case 'image':
-        return { name: 'image', className: styles.imgIcon };
-      default:
-        return { name: 'description', className: styles.fileIcon };
-    }
-  };
-
-  const iconConfig = getIconConfig(node.type, node.isOpen);
-
-  return (
-    <div>
-      <div
-        className={`${styles.nodeRow} ${isSelected ? styles.selected : ''}`}
-        style={{ paddingLeft: `${depth * 20 + 8}px` }}
-        onClick={handleNodeClick}
-      >
-        <div className={styles.nodeContent}>
-          {/* Chevron for Folders */}
-          <span className={styles.chevronContainer}>
-            {node.type === 'folder' && (
-              <Icon
-                name={node.isOpen ? 'expand_more' : 'chevron_right'}
-                className={styles.chevron}
-                filled={false} // Chevrons usually don't fill
-              />
-            )}
-          </span>
-
-          {/* Main Icon */}
-          <Icon
-            name={iconConfig.name}
-            className={iconConfig.className}
-            filled={isFilledState}
-          />
-
-          <span className={styles.nodeText}>{node.name}</span>
-        </div>
-
-        {/* Hover Actions */}
-        {node.type === 'folder' && (
-          <div className={styles.actions}>
-            <button
-              className={styles.actionBtn}
-              onClick={(e) => handleAdd(e, 'file')}
-              title="New File"
-            >
-              <Icon name="note_add" filled={false} />
-            </button>
-            <button
-              className={styles.actionBtn}
-              onClick={(e) => handleAdd(e, 'folder')}
-              title="New Folder"
-            >
-              <Icon name="create_new_folder" filled={false} />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Children */}
-      {node.isOpen &&
-        node.children &&
-        node.children.map((child) => (
-          <FileNodeItem
-            key={child.id}
-            node={child}
-            depth={depth + 1}
-            selectedId={selectedId}
-            onSelect={onSelect}
-            onToggle={onToggle}
-            onAdd={onAdd}
-          />
-        ))}
-    </div>
-  );
-};
-
-// --- Main Explorer Component ---
-export const FileExplorer: React.FC = () => {
-  const [data, setData] = useState<FileNode>(initialData);
+export const FileExplorer = forwardRef<FileExplorerRef, {}>((props, ref) => {
+  const {
+    data,
+    toggleFolder,
+    addNode,
+    deleteNode,
+    moveNode,
+    updateStatus,
+    batchImportFiles,
+  } = useFileTree();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const updateTree = (
-    nodes: FileNode,
-    targetId: string,
-    updateFn: (node: FileNode) => FileNode
-  ): FileNode => {
-    if (nodes.id === targetId) {
-      return updateFn(nodes);
-    }
-    if (nodes.children) {
-      return {
-        ...nodes,
-        children: nodes.children.map((child) =>
-          updateTree(child, targetId, updateFn)
-        ),
-      };
-    }
-    return nodes;
-  };
+  // Hidden input ref
+  const folderInputRef = useRef<HTMLInputElement>(null);
 
-  const toggleFolder = (id: string) => {
-    setData((prev) =>
-      updateTree(prev, id, (node) => ({ ...node, isOpen: !node.isOpen }))
-    );
-  };
+  // --- Expose Method to Parent ---
+  useImperativeHandle(ref, () => ({
+    triggerImport: () => {
+      // Trigger the hidden input click
+      folderInputRef.current?.click();
+    },
+  }));
 
-  const addItem = (parentId: string, type: 'file' | 'folder', name: string) => {
-    const newItem: FileNode = {
+  // --- Handlers ---
+
+  const handleAddFolder = (parentId: string, name: string) => {
+    const newNode: FileNode = {
       id: Date.now().toString(),
-      name,
-      type:
-        type === 'folder'
-          ? 'folder'
-          : name.endsWith('.pdf')
-          ? 'pdf'
-          : name.endsWith('.png') || name.endsWith('.jpg')
-          ? 'image'
-          : 'file',
-      children: type === 'folder' ? [] : undefined,
+      name: name,
+      type: 'folder',
+      children: [],
       isOpen: true,
     };
+    addNode(parentId, newNode);
+  };
 
-    setData((prev) =>
-      updateTree(prev, parentId, (node) => ({
-        ...node,
-        isOpen: true,
-        children: [...(node.children || []), newItem].sort((a, b) => {
-          if (a.type === 'folder' && b.type !== 'folder') return -1;
-          if (a.type !== 'folder' && b.type === 'folder') return 1;
-          return a.name.localeCompare(b.name);
-        }),
-      }))
-    );
+  const handleAddFile = (parentId: string, file: File) => {
+    // Create a FileList-like object (array of 1) to reuse batch logic
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    batchImportFiles(parentId, dt.files);
+
+    // Simulation of parsing (optional hook update)
+    // Note: Since batchImport generates random IDs, we'd need a real backend
+    // or a smarter ID system to track status updates perfectly.
+    // For UI demo, we skip the status update simulation here to keep logic clean.
+  };
+
+  const handleFolderSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (files.length > 100) {
+      const confirm = window.confirm(
+        `Importing ${files.length} files. Continue?`
+      );
+      if (!confirm) {
+        e.target.value = '';
+        return;
+      }
+    }
+
+    // Determine Target: Selected Folder OR Root
+    // If selectedId is a file, we find its parent?
+    // Simplification: If a file is selected, we usually import to Root or the File's parent.
+    // Since our hook doesn't easily expose "getParent(id)", let's default to:
+    // If selected is Folder -> Import there.
+    // Else -> Import to Root.
+
+    // We need to find the node type for selectedId.
+    // A quick tree traversal helper or passing the selected Node type would work.
+    // For now, let's just attempt to import to 'root' if nothing selected,
+    // or rely on batchImportFiles to fallback to root if target is invalid.
+
+    const target = selectedId || 'root';
+    batchImportFiles(target, files);
+
+    e.target.value = ''; // Reset
   };
 
   return (
     <div className={styles.explorerContainer}>
+      {/* Hidden Global Folder Input */}
+      <input
+        type="file"
+        ref={folderInputRef}
+        style={{ display: 'none' }}
+        // @ts-ignore
+        webkitdirectory=""
+        directory=""
+        multiple
+        onChange={handleFolderSelected}
+      />
+
+      {/* Removed Toolbar Header */}
+
       <FileNodeItem
         node={data}
         depth={0}
         selectedId={selectedId}
         onSelect={setSelectedId}
         onToggle={toggleFolder}
-        onAdd={addItem}
+        onAddFile={handleAddFile}
+        onAddFolder={handleAddFolder}
+        onDelete={deleteNode}
+        onMove={moveNode}
       />
     </div>
   );
-};
+});
+
+FileExplorer.displayName = 'FileExplorer';

@@ -1,159 +1,159 @@
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
 
 /* Sidebar.module.css */
 .sidebar {
-	height: 100vh;
-	background-color: #111111; /* Matching the deep dark background */
-	border-right: 1px solid #222;
-	color: #e3e3e3;
-	display: flex;
-	flex-direction: column;
-	transition: width 0.3s ease;
-	overflow: hidden;
-	font-family: "Inconsolata", sans-serif; /* Assumed standard sans-serif */
+  height: 100vh;
+  background-color: #111111; /* Matching the deep dark background */
+  border-right: 1px solid #222;
+  color: #e3e3e3;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  font-family: 'Inconsolata', sans-serif; /* Assumed standard sans-serif */
 }
 
 .expanded {
-	width: 307px;
+  width: 307px;
 }
 
 .collapsed {
-	width: 63px;
+  width: 63px;
 }
 
 /* Header Section */
 .header2 {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding-top: 1rem;
-	margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  margin-right: 1rem;
 }
 
 .header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
 }
 
 .logoContainer {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	overflow: hidden;
-	white-space: nowrap;
-	padding-left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 1rem;
 }
 
 .logoIcon {
-	color: #fff;
-	min-width: 24px;
+  color: #fff;
+  min-width: 24px;
 }
 
 .brandName {
-	font-weight: 700;
-	font-size: 1rem;
-	letter-spacing: 0.05em;
-	opacity: 1;
-	transition: opacity 0.2s;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  opacity: 1;
+  transition: opacity 0.2s;
 }
 
 .menuBtn {
-	background: transparent;
-	border: none;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-	border-radius: 50%;
-	height: 35px;
-	width: 35px;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
 }
 
 .menuBtnIcon {
-	height: 12px;
-	width: 16px;
+  height: 12px;
+  width: 16px;
 }
 
 .menuBtn:hover {
-	color: #fff;
-	background-color: #222;
+  color: #fff;
+  background-color: #222;
 }
 
 /* Navigation List */
 .navSection {
-	padding: 10px 10px 0px 10px;
-	display: flex;
-	flex-direction: column;
+  padding: 10px 10px 0px 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .navItem {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	padding: 0.6rem 0.5rem;
-	border-radius: 6px;
-	cursor: pointer;
-	color: #a0a0a0;
-	transition: background-color 0.2s, color 0.2s;
-	white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.6rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #a0a0a0;
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
 }
 
 .navItem:hover {
-	background-color: #1a1a1a;
-	color: #fff;
+  background-color: #1a1a1a;
+  color: #fff;
 }
 
 .navText {
-	font-size: 0.9rem;
-	font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 /* Projects Section */
 .projectsHeader {
-	padding: 0.5rem 1.5rem;
-	font-size: 0.9rem;
-	color: #8b8b8b;
-	font-weight: 900;
-	white-space: nowrap;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  color: #8b8b8b;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
 .projectList {
-	flex: 1;
-	overflow-y: auto;
-	padding: 0 0.5rem;
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 0.5rem;
 }
 
 .projectItem {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 0.6rem 0.5rem;
-	border-radius: 6px;
-	cursor: pointer;
-	color: #a0a0a0;
-	font-size: 0.9rem;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .projectItem:hover {
-	background-color: #1a1a1a;
-	color: #fff;
+  background-color: #1a1a1a;
+  color: #fff;
 }
 
 .activeProject {
-	background-color: #1f1f1f;
-	color: #fff;
+  background-color: #1f1f1f;
+  color: #fff;
 }
 
 /* Footer / Settings */
 .footer {
-	padding: 1rem 0.5rem;
-	border-top: 1px solid #1a1a1a;
+  padding: 1rem 0.5rem;
+  border-top: 1px solid #1a1a1a;
 }
 
 /* Utility to hide text when collapsed */
@@ -161,15 +161,15 @@
 .collapsed .navText,
 .collapsed .projectsHeader,
 .collapsed .projectItem span {
-	opacity: 0;
-	pointer-events: none;
-	width: 0;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
 }
 
 .collapsed .header {
-	justify-content: center;
+  justify-content: center;
 }
 
 .collapsed .logoContainer {
-	display: none;
+  display: none;
 }
