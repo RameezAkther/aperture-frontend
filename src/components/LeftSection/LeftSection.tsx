@@ -13,7 +13,7 @@ import DeleteAllIcon from "@/assets/delete/delete_all.svg";
 import DeleteAllFillIcon from "@/assets/delete/delete_all_fill.svg";
 import VerticalDotsIcon from "@/assets/menu/vertical_dots.svg";
 import ChevronDown from "@/assets/down/chevron_down.svg";
-import { FileExplorer } from "@/ui/FileExplorer";
+import { FileExplorer } from "@/ui/explorer/FileExplorer";
 import { SessionTree } from "@/ui/SessionTree";
 
 // 1. Add 'children' to the interface

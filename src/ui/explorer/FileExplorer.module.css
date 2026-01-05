@@ -1,0 +1,129 @@
+/* src/ui/FileExplorer.module.css */
+
+.explorerContainer {
+  font-family: 'Inconsolata', monospace;
+  color: #cccccc;
+  font-size: 14px;
+  user-select: none;
+  padding-top: 8px;
+  width: 100%;
+}
+
+/* --- Node Row Styling --- */
+.nodeRow {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding-right: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.1s;
+  position: relative;
+  /* Default CSS var for fill, overridden by inline style from React */
+  --icon-fill: 0;
+}
+
+.nodeRow:hover {
+  background-color: #2a2d2e;
+}
+
+/* Force icons to fill on hover */
+.nodeRow:hover .iconBase {
+  --icon-fill: 1 !important;
+}
+
+.nodeRow.selected {
+  background-color: #37373d; /* VS Code style selection */
+  color: #ffffff;
+}
+
+.nodeRow:hover .actions {
+  opacity: 1;
+}
+
+/* --- Content Group --- */
+.nodeContent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Text --- */
+.nodeText {
+  color: inherit; /* Inherit from nodeRow for selection contrast */
+  line-height: 1;
+  padding-top: 2px;
+}
+
+/* --- Icons --- */
+.iconBase {
+  font-size: 20px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  /* Smooth transition for the fill effect */
+  transition: font-variation-settings 0.2s ease;
+}
+
+.chevronContainer {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chevron {
+  color: #888;
+  font-size: 20px !important;
+}
+
+/* Icon Colors */
+.folderIcon {
+  color: #dcb67a;
+}
+.fileIcon {
+  color: #8aa4c9;
+}
+.pdfIcon {
+  color: #e06c75;
+}
+.imgIcon {
+  color: #c678dd;
+}
+
+/* --- Quick Actions --- */
+.actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  margin-left: auto;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  padding: 2px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionBtn:hover {
+  color: #fff;
+  background-color: #3e3e3e;
+}
+
+.actionBtn .iconBase {
+  font-size: 16px !important;
+}
